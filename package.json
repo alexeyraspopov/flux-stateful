@@ -1,0 +1,24 @@
+{
+  "name": "flux-stateful",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexeyraspopov/flux-stateful"
+  },
+  "keywords": [
+    "flux",
+    "store",
+    "state"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexeyraspopov/flux-stateful/issues"
+  },
+  "homepage": "https://github.com/alexeyraspopov/flux-stateful"
+}

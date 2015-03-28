@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/alexeyraspopov/flux-stateful/issues"
   },
-  "homepage": "https://github.com/alexeyraspopov/flux-stateful"
+  "homepage": "https://github.com/alexeyraspopov/flux-stateful",
+  "dependencies": {
+    "object-assign": "^2.0.0"
+  }
 }

@@ -14,6 +14,14 @@ module.exports = function(dispatcher, methods){
 			return this.state;
 		},
 
+		addEventListener: function(callback){
+			this.on('change', callback);
+		},
+		
+		removeEventListener: function(callback){
+			this.removeListener('change', callback);
+		},
+
 		dispatchToken: dispatcher.register(function(action){
 			if(methods.hasOwnProperty(action.type)){
 				store[action.type](action);

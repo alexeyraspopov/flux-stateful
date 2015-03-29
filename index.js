@@ -15,9 +15,9 @@ module.exports = function(dispatcher, methods){
 		},
 
 		addEventListener: function(callback){
-			this.on('change', callback);
+			this.addListener('change', callback);
 		},
-		
+
 		removeEventListener: function(callback){
 			this.removeListener('change', callback);
 		},

@@ -1,15 +1,11 @@
 var gulp = require('gulp'),
-	babel = require('gulp-babel'),
-	mocha = require('gulp-mocha'),
-	map = require('map-stream');
+	jasmine = require('gulp-jasmine');
 
 gulp.task('specs', function(){
+	require('babel/register')({ modules: 'common' });
+
 	return gulp.src('specs.js')
-		.pipe(babel())
-		.pipe(map(function(file, done){
-			eval(file.contents.toString());
-			done(null, file);
-		}));
+		.pipe(jasmine());
 });
 
 gulp.task('default', ['specs']);

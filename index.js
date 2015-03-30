@@ -1,41 +1,17 @@
 var EventEmitter = require('events').EventEmitter,
-	assign = require('object-assign');
+	assign = require('object-assign'),
+	store = require('./constructor');
 
-function getInitialData(methods){
-	return typeof methods.getInitialData === 'function' ? methods.getInitialData() : {};
-}
+module.exports = store.bind(null, assing({
+	addEventListener: function(callback){
+		this.addListener('change', callback);
+	},
 
-module.exports = function(dispatcher, methods){
-	var store = assign({
-		state: getInitialData(methods),
+	removeEventListener: function(callback){
+		this.removeListener('change', callback);
+	},
 
-		setState: function(patch){
-			assign(this.state, patch);
-			this.emitChange();
-		},
-
-		getStoreData: function(){
-			return this.state;
-		},
-
-		addEventListener: function(callback){
-			this.addListener('change', callback);
-		},
-
-		removeEventListener: function(callback){
-			this.removeListener('change', callback);
-		},
-
-		emitChange: function(){
-			this.emit('change');
-		},
-
-		dispatchToken: dispatcher.register(function(action){
-			if(typeof methods[action.type] === 'function'){
-				store[action.type](action);
-			}
-		})
-	}, EventEmitter.prototype, methods);
-
-	return store;
-};
+	emitChange: function(){
+		this.emit('change');
+	}
+}, EventEmitter.prototype));

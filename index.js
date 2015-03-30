@@ -2,7 +2,7 @@ var EventEmitter = require('events').EventEmitter,
 	assign = require('object-assign'),
 	store = require('./constructor');
 
-module.exports = store.bind(null, assing({
+module.exports = store.bind(null, assign({
 	addEventListener: function(callback){
 		this.addListener('change', callback);
 	},

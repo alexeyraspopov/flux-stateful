@@ -17,9 +17,11 @@ module.exports = function(emitter, dispatcher, methods){
 			return this.state;
 		},
 
-		dispatchToken: dispatcher.register(function(action){
-			if(typeof methods[action.type] === 'function'){
-				store[action.type](action);
+		dispatchToken: dispatcher.register(function(payload){
+			var actionType = payload.actionType;
+
+			if(typeof methods[actionType] === 'function'){
+				store[actionType](payload);
 			}
 		})
 	}, emitter, methods);

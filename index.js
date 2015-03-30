@@ -1,13 +1,17 @@
 var EventEmitter = require('events').EventEmitter,
 	assign = require('object-assign');
 
+function getInitialData(methods){
+	return typeof methods.getInitialData === 'function' ? methods.getInitialData() : {};
+}
+
 module.exports = function(dispatcher, methods){
 	var store = assign({
-		state: {},
+		state: getInitialData(methods),
 
 		setState: function(patch){
 			assign(this.state, patch);
-			this.emit('change');
+			this.emitChange();
 		},
 
 		getStoreData: function(){
@@ -22,8 +26,12 @@ module.exports = function(dispatcher, methods){
 			this.removeListener('change', callback);
 		},
 
+		emitChange: function(){
+			this.emit('change');
+		},
+
 		dispatchToken: dispatcher.register(function(action){
-			if(methods.hasOwnProperty(action.type)){
+			if(typeof methods[action.type] === 'function'){
 				store[action.type](action);
 			}
 		})

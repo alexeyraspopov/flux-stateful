@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "babel": "^4.7.16",
+    "flux": "^2.0.1",
     "gulp": "^3.8.11",
     "gulp-jasmine": "^2.0.1",
     "keymirror": "^0.1.1"

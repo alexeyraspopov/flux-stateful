@@ -20,7 +20,7 @@ module.exports = function(emitter, dispatcher, methods){
 		dispatchToken: dispatcher.register(function(payload){
 			var actionType = payload.actionType;
 
-			if(typeof methods[actionType] === 'function'){
+			if(typeof store[actionType] === 'function'){
 				store[actionType](payload);
 			}
 		})

@@ -1,18 +1,29 @@
 var FluxStore = require('./index'),
-	keyMirror = require('keymirror');
+	keyMirror = require('keymirror'),
+	Dispatcher = require('flux').Dispatcher;
 
-var DummyConstants = keyMirror({
-	SOME_ACTION: true,
-});
+describe('boo', function(){
+	var AppDispatcher, Constants, Store;
 
-var DummyStore = FluxStore({ register: function(){} }, {
-	[DummyConstants.SOME_ACTION](payload){
-		return 13;
-	}
-});
+	beforeEach(function(){
+		AppDispatcher = new Dispatcher();
 
-describe('boo', function() {
-	it('should pass', function() {
+		Constants = keyMirror({
+			INCREMENT: true,
+		});
+
+		Store = FluxStore(AppDispatcher, {
+			getInitialData: function(){
+				return { count: 0 };
+			},
+
+			[Constants.INCREMENT](payload){
+				this.setState({ count: this.state.count + payload.increment });
+			}
+		});
+	});
+
+	it('should pass', function(){
 		expect(true).toBe(true);
 	});
 });

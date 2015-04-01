@@ -13,7 +13,7 @@ module.exports = function(emitter, dispatcher, methods){
 			this.emitChange();
 		},
 
-		getStoreState: function(){
+		getState: function(){
 			return this.state;
 		},
 

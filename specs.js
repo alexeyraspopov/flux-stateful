@@ -31,4 +31,9 @@ describe('Store', function(){
 		AppDispatcher.dispatch({ actionType: Constants.INCREMENT, increment: 13 });
 		expect(Store.getState()).toEqual({ count:13 });
 	});
+
+	it('should use custom serialization function', function() {
+		Store.serialize = JSON.stringify;
+		expect(Store.getState()).toBe('{"count":0}');
+	});
 });

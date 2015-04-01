@@ -1,19 +1,19 @@
 var assign = require('object-assign');
 
-function getInitialData(methods){
-	return typeof methods.getInitialData === 'function' ? methods.getInitialData() : {};
+function getInitialState(methods){
+	return typeof methods.getInitialState === 'function' ? methods.getInitialState() : {};
 }
 
 module.exports = function(emitter, dispatcher, methods){
 	var store = assign({
-		state: getInitialData(methods),
+		state: getInitialState(methods),
 
 		setState: function(patch){
 			assign(this.state, patch);
 			this.emitChange();
 		},
 
-		getStoreData: function(){
+		getStoreState: function(){
 			return this.state;
 		},
 

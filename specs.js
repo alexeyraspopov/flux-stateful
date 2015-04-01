@@ -13,7 +13,7 @@ describe('boo', function(){
 		});
 
 		Store = FluxStore(AppDispatcher, {
-			getInitialData: function(){
+			getInitialState: function(){
 				return { count: 0 };
 			},
 

@@ -12,7 +12,7 @@ React-like state management in your Flux stores.
 		ActionTypes = require('./constants');
 
 	module.exports = FluxStore(AppDispatcher, {
-		getInitialData(){
+		getInitialState(){
 			return { todos: Immutable.List() };
 		},
 

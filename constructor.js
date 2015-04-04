@@ -17,6 +17,10 @@ module.exports = function(emitter, dispatcher, methods){
 			return this.serialize(this.state);
 		},
 
+		serialize: function(state){
+			return state;
+		},
+
 		dispatchToken: dispatcher.register(function(payload){
 			var actionType = payload.actionType;
 
@@ -24,11 +28,7 @@ module.exports = function(emitter, dispatcher, methods){
 				store[actionType](payload);
 			}
 		})
-	}, emitter, methods, {
-		serialize: function(state) {
-			return state;
-		}
-	});
+	}, emitter, methods);
 
 	return store;
 };

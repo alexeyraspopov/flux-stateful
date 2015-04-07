@@ -1,0 +1,30 @@
+{
+  "name": "flux-stateful",
+  "main": "index.js",
+  "version": "0.1.1",
+  "description": "React-like state management in your Flux stores",
+  "homepage": "https://github.com/alexeyraspopov/flux-stateful",
+  "authors": [
+    "Alexey Raspopov (https://github.com/alexeyraspopov)"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "react",
+    "flux",
+    "store",
+    "state"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "object-assign": "~2.0.0"
+  }
+}

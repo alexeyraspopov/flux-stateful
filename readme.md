@@ -4,7 +4,13 @@ React-like state management in your Flux stores.
 
 ## Install
 
-	$ npm install flux-stateful --save
+```bash
+$ npm install flux-stateful --save
+```
+
+```bash
+$ bower install flux-stateful --save
+```
 
 ## Usage
 

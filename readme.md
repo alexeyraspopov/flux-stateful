@@ -2,6 +2,10 @@
 
 React-like state management in your Flux stores.
 
+## Install
+
+	$ npm install flux-stateful --save
+
 ## Usage
 
 *NOTE: example uses [computed property names](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names) which are part of ECMAScript6.*

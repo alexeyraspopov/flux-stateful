@@ -18,11 +18,11 @@
   ],
   "license": "MIT",
   "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "*",
+    "!index.js",
+    "!constructor.js",
+    "!bower.json",
+    "!readme.md"
   ],
   "dependencies": {
     "object-assign": "~2.0.0"

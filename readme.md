@@ -81,12 +81,6 @@ If you're familiar with basic concepts of Flux you already know main API of this
  * `emitChange()`
  * `dispatchToken`
 
-Also, all your methods will be available for 3rd party interaction with store.
-
-For the first example you can use it's reactions as methods:
-
-	FluxStore[ActionTypes.TODO_CREATE]({ text: 'feed a cat' });
-
 And it will works in the same way: change store's state and emit changes.
 
 ## Custom Event Emitter

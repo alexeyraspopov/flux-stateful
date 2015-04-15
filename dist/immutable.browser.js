@@ -3,15 +3,12 @@ window.ImmutableStore = require("./immutable");
 },{"./immutable":2}],2:[function(require,module,exports){
 var store = require('./src/store');
 
-module.exports = function ImmutableStore(dispatcher, methods) {
-	return store({
-		dispatch: function(actionType, payload) {
-			this.state = this[actionType](this.state, payload);
-			this.publish(this.getState());
-		}
-	}, dispatcher, methods);
-};
-
+module.exports = store.bind(null, {
+	dispatch: function(actionType, payload) {
+		this.state = this[actionType](this.state, payload);
+		this.publish(this.getState());
+	}
+});
 },{"./src/store":5}],3:[function(require,module,exports){
 'use strict';
 

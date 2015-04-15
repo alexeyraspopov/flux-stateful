@@ -1,17 +1,14 @@
-var EventEmitter = require('events').EventEmitter,
-	assign = require('object-assign'),
-	store = require('./constructor');
+var store = require('./constructor'),
+	assign = require('object-assign');
 
-module.exports = store.bind(null, assign({
-	addEventListener: function(callback){
-		this.addListener('change', callback);
-	},
-
-	removeEventListener: function(callback){
-		this.removeListener('change', callback);
-	},
-
-	emitChange: function(){
-		this.emit('change');
-	}
-}, EventEmitter.prototype));
+module.exports = function Store(dispatcher, methods) {
+	return store({
+		dispatch: function(actionType, payload) {
+			this[actionType](payload);
+		},
+		setState: function(patch){
+			assign(this.state, patch);
+			this.publish(this.getState());
+		}
+	}, dispatcher, methods);
+};

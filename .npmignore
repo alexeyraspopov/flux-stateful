@@ -1,5 +1,6 @@
 *
-!index.js
-!constructor.js
+!src
+!dist
+!*.js
 !package.json
 !readme.md

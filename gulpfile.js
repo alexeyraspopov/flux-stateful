@@ -14,8 +14,6 @@ gulp.task('complexity', function() {
 		.pipe(complexity());
 });
 
-gulp.task('browserify', ['browserify-simple', 'browserify-pure']);
-
 gulp.task('browserify-simple', function() {
 	return file('index.browser.js', 'window.Store = require("./index");', { src: true })
 		.pipe(browserify())
@@ -28,4 +26,5 @@ gulp.task('browserify-pure', function() {
 		.pipe(gulp.dest('./dist'));
 });
 
+gulp.task('browserify', ['browserify-simple', 'browserify-pure']);
 gulp.task('default', ['specs', 'complexity', 'browserify']);

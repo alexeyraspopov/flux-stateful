@@ -84,7 +84,48 @@ If you want to grab current state of store, use `getState` method.
 
 ## Immutable Pure Stores
 
-...
+	var ImmutableStore = require('flux-stateful'),
+		Immutable = require('immutable'),
+		AppDispatcher = require('./dispatcher'),
+		ActionTypes = require('./constants'),
+		Todo = Immutable.Record({ id: '', text: '', completed: false });
+
+	module.exports = ImmutableStore(AppDispatcher, {
+		getInitialState(){
+			return Immutable.Map({
+				todos: Immutable.OrderedMap(),
+				newTodo: ''
+			});
+		},
+
+		[ActionTypes.TODO_CREATE](state, payload){
+			var id = uuid(),
+				todo = Todo({
+					id: id,
+					text: payload.text
+				});
+
+			return state
+				.setIn(['todos', id], todo)
+				.set('newTodo', '');
+		},
+
+		[ActionTypes.TODO_DESTROY](state, payload){
+			return state.removeIn(['todos', payload.id]);
+		},
+
+		[ActionTypes.TODO_UPDATE_STATUS](state, payload){
+			return state.setIn(['todos', payload.id, 'completed'], payload.completed);
+		},
+
+		// ...
+
+		serialize(state){
+			return state.toJS();
+		}
+	});
+
+## Dispatcher
 
 ## Store API
 

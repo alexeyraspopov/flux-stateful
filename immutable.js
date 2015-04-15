@@ -1,4 +1,4 @@
-var store = require('./constructor');
+var store = require('./src/store');
 
 module.exports = function ImmutableStore(dispatcher, methods) {
 	return store({

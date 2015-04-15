@@ -1,5 +1,5 @@
-var store = require('./constructor'),
-	assign = require('object-assign');
+var assign = require('object-assign'),
+	store = require('./src/store');
 
 module.exports = function Store(dispatcher, methods) {
 	return store({

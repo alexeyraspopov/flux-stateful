@@ -1,17 +1,13 @@
-var assign = require('object-assign');
+var assign = require('object-assign'),
+	newsletter = require('newsletter');
 
-function getInitialState(methods){
+function getInitialState(methods) {
 	return typeof methods.getInitialState === 'function' ? methods.getInitialState() : {};
 }
 
-module.exports = function(emitter, dispatcher, methods){
+module.exports = function(operations, dispatcher, methods) {
 	var store = assign({
 		state: getInitialState(methods),
-
-		setState: function(patch){
-			assign(this.state, patch);
-			this.emitChange();
-		},
 
 		getState: function(){
 			return this.serialize(this.state);
@@ -21,14 +17,14 @@ module.exports = function(emitter, dispatcher, methods){
 			return state;
 		},
 
-		dispatchToken: dispatcher.register(function(payload){
+		dispatchToken: dispatcher.register(function(payload) {
 			var actionType = payload.actionType;
 
-			if(typeof store[actionType] === 'function'){
-				store[actionType](payload);
+			if(typeof methods[actionType] === 'function'){
+				store.dispatch(actionType, payload);
 			}
 		})
-	}, emitter, methods);
+	}, operations, newsletter(), methods);
 
 	return store;
 };

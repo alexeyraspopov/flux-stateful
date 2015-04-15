@@ -43,7 +43,7 @@ The main concept is really easy:
 			this.setState({
 				todos: this.state.todos.delete(action.id)
 			});
-		}		
+		}
 	});
 
 *NOTE: ImmutableJS is not required but recommended.*
@@ -55,7 +55,7 @@ If you don't use constants or don't want to use ES6 just use plain old literal n
 
 		'todo:create': function(action){
 			// ...
-		}	
+		}
 	});
 
 If you're using custom data types and want store to publish POJO then you should use `serialize` method. It will be called each time when store needs to emit new value.
@@ -75,19 +75,28 @@ If you're using custom data types and want store to publish POJO then you should
 If you want to grab current state of store, use `getState` method.
 
 	var App = React.createClass({
-		getInitialState: function(){
+		getInitialState(){
 			return Store.getState();
 		}
 
 		...
 	});
 
+## Immutable Pure Stores
+
+...
+
 ## Store API
 
- * `subscribe(callback)`
- * `unsubscribe(callback)`
- * `publish()`
- * `dispatchToken`
+	Store.subscribe(callback)
+	Store.unsubscribe(callback)
+	Store.publish()
+
+All this methods are inherited from [newsletter](https://github.com/alexeyraspopov/newsletter)
+
+	dispatchToken
+
+ID from Flux Dispatcher. Can be used for `waitFor` method. See [official Flux documentation](https://facebook.github.io/flux/docs/dispatcher.html)
 
 ## License
 

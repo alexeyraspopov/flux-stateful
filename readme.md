@@ -96,7 +96,7 @@ All this methods are inherited from [newsletter](https://github.com/alexeyraspop
 
 	dispatchToken
 
-ID from Flux Dispatcher. Can be used for `waitFor` method. See [official Flux documentation](https://facebook.github.io/flux/docs/dispatcher.html)
+ID from Flux Dispatcher. Can be used for `waitFor` method. Check [official Flux documentation](https://facebook.github.io/flux/docs/dispatcher.html)
 
 ## License
 

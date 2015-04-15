@@ -26,6 +26,7 @@
     "!readme.md"
   ],
   "dependencies": {
-    "object-assign": "~2.0.0"
+    "object-assign": "~2.0.0",
+    "newsletter": "~1.0.0"
   }
 }

@@ -10,12 +10,12 @@ gulp.task('specs', function(){
 });
 
 gulp.task('complexity', function() {
-	return gulp.src(['index.js', 'immutable.js', 'src/*.js'])
+	return gulp.src(['index.js', 'immutable.js', 'mutable.js', 'src/*.js'])
 		.pipe(complexity());
 });
 
-gulp.task('browserify-simple', function() {
-	return file('index.browser.js', 'window.Store = require("./index");', { src: true })
+gulp.task('browserify-stateful', function() {
+	return file('stateful.browser.js', 'window.StatefulStore = require("./index");', { src: true })
 		.pipe(browserify())
 		.pipe(gulp.dest('./dist'));
 });
@@ -26,5 +26,11 @@ gulp.task('browserify-pure', function() {
 		.pipe(gulp.dest('./dist'));
 });
 
-gulp.task('browserify', ['browserify-simple', 'browserify-pure']);
+gulp.task('browserify-mutable', function() {
+	return file('mutable.browser.js', 'window.MutableStore = require("./mutable");', { src: true })
+		.pipe(browserify())
+		.pipe(gulp.dest('./dist'));
+})
+
+gulp.task('browserify', ['browserify-stateful', 'browserify-pure', 'browserify-mutable']);
 gulp.task('default', ['specs', 'complexity', 'browserify']);

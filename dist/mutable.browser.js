@@ -1,19 +1,15 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-window.Store = require("./index");
-},{"./index":2}],2:[function(require,module,exports){
-var assign = require('object-assign'),
-	store = require('./src/store');
+window.MutableStore = require("./mutable");
+},{"./mutable":2}],2:[function(require,module,exports){
+var store = require('./src/store');
 
 module.exports = store.bind(null, {
 	dispatch: function(actionType, payload) {
-		this[actionType](payload);
-	},
-	setState: function(patch){
-		assign(this.state, patch);
+		this[actionType](this.state, payload);
 		this.publish(this.getState());
 	}
 });
-},{"./src/store":5,"object-assign":4}],3:[function(require,module,exports){
+},{"./src/store":5}],3:[function(require,module,exports){
 'use strict';
 
 module.exports = function newsletter() {

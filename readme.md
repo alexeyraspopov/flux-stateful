@@ -19,12 +19,12 @@ $ bower install flux-stateful --save
 The main concept is really easy:
 
 ```javascript
-var FluxStore = require('flux-stateful'),
+var StatefulStore = require('flux-stateful'),
 	Immutable = require('immutable'),
 	AppDispatcher = require('./dispatcher'),
 	ActionTypes = require('./constants');
 
-module.exports = FluxStore(AppDispatcher, {
+module.exports = StatefulStore(AppDispatcher, {
 	getInitialState(){
 		return { todos: Immutable.OrderedMap() };
 	},
@@ -93,7 +93,7 @@ var App = React.createClass({
 ## Immutable Pure Stores
 
 ```javascript
-var ImmutableStore = require('flux-stateful'),
+var ImmutableStore = require('flux-stateful/immutable'),
 	Immutable = require('immutable'),
 	AppDispatcher = require('./dispatcher'),
 	ActionTypes = require('./constants'),
@@ -136,6 +136,8 @@ module.exports = ImmutableStore(AppDispatcher, {
 ```
 
 ## Dispatcher
+
+Currently `flux-stateful` depends on [Facebook's Dispatcher](https://facebook.github.io/flux/docs/dispatcher.html).
 
 ## Store API
 

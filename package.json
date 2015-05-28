@@ -4,7 +4,7 @@
   "description": "React-like state management in your Flux stores",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/gulp specs"
+    "test": "gulp specs"
   },
   "repository": "alexeyraspopov/flux-stateful",
   "keywords": [

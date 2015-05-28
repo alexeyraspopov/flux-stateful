@@ -7,6 +7,6 @@ module.exports = store.bind(null, {
 	},
 	setState: function(patch){
 		assign(this.state, patch);
-		this.publish(this.getState());
+		this.publish(this.serialize(this.state));
 	}
 });

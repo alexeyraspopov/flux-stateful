@@ -5,26 +5,37 @@ function getInitialState(methods) {
 	return typeof methods.getInitialState === 'function' ? methods.getInitialState() : {};
 }
 
+function identity(a) {
+	return a;
+}
+
 module.exports = function(operations, dispatcher, methods) {
-	var store = assign({
+	var store, token;
+
+	function dispatchAction(payload) {
+		var actionType = payload.actionType;
+
+		if(typeof methods[actionType] === 'function'){
+			store.dispatch(actionType, payload);
+		}
+	}
+
+	function serializeState() {
+		if(dispatcher.isDispatching()){
+			dispatcher.waitFor([token]);
+		}
+
+		return store.serialize(store.state);
+	}
+
+	store = assign({
 		state: getInitialState(methods),
-
-		getState: function(){
-			return this.serialize(this.state);
-		},
-
-		serialize: function(state){
-			return state;
-		},
-
-		dispatchToken: dispatcher.register(function(payload) {
-			var actionType = payload.actionType;
-
-			if(typeof methods[actionType] === 'function'){
-				store.dispatch(actionType, payload);
-			}
-		})
+		getState: serializeState,
+		serialize: identity,
+		dispatchToken: token
 	}, operations, newsletter(), methods);
+
+	token = dispatcher.register(dispatchAction);
 
 	return store;
 };

@@ -30,7 +30,7 @@ module.exports = StatefulStore(AppDispatcher, {
 	},
 
 	// Method which will be called if payload.actionType === ActionTypes.TODO_CREATE
-	[ActionTypes.TODO_CREATE](action){
+	[ActionTypes.TODO_CREATED](action){
 		var id = uuid.v4(),
 			newTodo = { id, text: action.text, completed: false };
 
@@ -40,7 +40,7 @@ module.exports = StatefulStore(AppDispatcher, {
 	},
 
 	// You already understood how it works
-	[ActionTypes.TODO_DESTROY](action){
+	[ActionTypes.TODO_DESTROYED](action){
 		this.setState({
 			todos: this.state.todos.delete(action.id)
 		});
@@ -56,7 +56,7 @@ If you don't use constants or don't want to use ES6 just use plain old literal n
 module.exports = FluxStore(AppDispatcher, {
 	// ...
 
-	'todo:create': function(action){
+	'TODO_CREATED': function(action){
 		// ...
 	}
 });
@@ -107,7 +107,7 @@ module.exports = ImmutableStore(AppDispatcher, {
 		});
 	},
 
-	[ActionTypes.TODO_CREATE](state, payload){
+	[ActionTypes.TODO_CREATED](state, payload){
 		var id = uuid(),
 			todo = Todo({
 				id: id,
@@ -119,11 +119,11 @@ module.exports = ImmutableStore(AppDispatcher, {
 			.set('newTodo', '');
 	},
 
-	[ActionTypes.TODO_DESTROY](state, payload){
+	[ActionTypes.TODO_DESTROYED](state, payload){
 		return state.removeIn(['todos', payload.id]);
 	},
 
-	[ActionTypes.TODO_UPDATE_STATUS](state, payload){
+	[ActionTypes.TODO_STATUS_UPDATED](state, payload){
 		return state.setIn(['todos', payload.id, 'completed'], payload.completed);
 	},
 
@@ -147,7 +147,7 @@ Store.unsubscribe(callback);
 Store.publish(data);
 ```
 
-All this methods are inherited from [newsletter](https://github.com/alexeyraspopov/newsletter)
+All this methods are inherited from [newsletter](https://github.com/alexeyraspopov/newsletter).
 
 ```javascript
 dispatchToken

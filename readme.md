@@ -139,6 +139,26 @@ module.exports = ImmutableStore(AppDispatcher, {
 
 Currently `flux-stateful` depends on [Facebook's Dispatcher](https://facebook.github.io/flux/docs/dispatcher.html).
 
+### Dispatcher's waitFor
+
+You don't need to think about `waitFor`. You don't need to think about it as a good or bad design decision. Flux-stateful use it under the hood so you just need to use `getState()` method when you need to get data from another stores.
+
+```javascript
+StoreA = Stateful(Dispatcher, {
+	[SMTH_HAPPENED](state, action){
+		state.data = action.data;
+	}
+});
+
+StoreB = Stateful(Dispatcher, {
+	[SMTH_HAPPENED](state, action){
+		var derived = StoreA.getState();
+
+		state.data = derived.data + action.data;
+	}
+});
+```
+
 ## Store API
 
 ```javascript
@@ -153,7 +173,7 @@ All this methods are inherited from [newsletter](https://github.com/alexeyraspop
 dispatchToken
 ```
 
-ID from Flux Dispatcher. Can be used for `waitFor` method. Check [official Flux documentation](https://facebook.github.io/flux/docs/dispatcher.html)
+ID from Flux Dispatcher. Check [official Flux documentation](https://facebook.github.io/flux/docs/dispatcher.html)
 
 ## License
 

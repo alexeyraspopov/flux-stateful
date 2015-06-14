@@ -9,33 +9,45 @@ function identity(a) {
 	return a;
 }
 
-module.exports = function(operations, dispatcher, methods) {
-	var store, token;
-
-	function dispatchAction(payload) {
-		var actionType = payload.actionType;
-
-		if(typeof methods[actionType] === 'function'){
-			store.dispatch(actionType, payload);
-		}
+function mutate(store, type, action) {
+	switch (type) {
+	case 'mutable':
+		store[action.type](store.state, action);
+		break;
+	case 'immutable':
+		store.state = store[action.type](store.state, action);
+		break;
 	}
+}
 
-	function serializeState() {
-		if(dispatcher.isDispatching()){
-			dispatcher.waitFor([token]);
+module.exports = function(storeType) {
+	return function(dispatcher, methods) {
+		var store, token;
+
+		function dispatchAction(action) {
+			if(typeof methods[action.type] === 'function'){
+				mutate(store, storeType, action);
+				store.publish(store.serialize(store.state));
+			}
 		}
 
-		return store.serialize(store.state);
-	}
+		function serializeState() {
+			if(dispatcher.isDispatching()){
+				dispatcher.waitFor([token]);
+			}
 
-	store = assign({
-		state: getInitialState(methods),
-		getState: serializeState,
-		serialize: identity,
-		dispatchToken: token
-	}, operations, newsletter(), methods);
+			return store.serialize(store.state);
+		}
 
-	token = dispatcher.register(dispatchAction);
+		store = assign({
+			state: getInitialState(methods),
+			getState: serializeState,
+			serialize: identity,
+			dispatchToken: token
+		}, newsletter(), methods);
 
-	return store;
+		token = dispatcher.register(dispatchAction);
+
+		return store;
+	};
 };

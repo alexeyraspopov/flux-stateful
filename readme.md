@@ -149,9 +149,12 @@ StoreA = Stateful(Dispatcher, {
 		state.data = action.data;
 	}
 });
+```
 
+```javascript
 StoreB = Stateful(Dispatcher, {
 	[SMTH_HAPPENED](state, action){
+		// just get some data from another store
 		var derived = StoreA.getState();
 
 		state.data = derived.data + action.data;

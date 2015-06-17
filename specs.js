@@ -1,34 +1,56 @@
-var FluxStore = require('./index'),
+var FluxStore = require('./index').Mutable,
 	Dispatcher = require('flux').Dispatcher;
 
 describe('Store', function(){
-	var AppDispatcher, Store;
+	var InitialState, AppDispatcher, Action, Store;
 
-	beforeEach(function(){
+	beforeEach(function() {
+		InitialState = { counter: 0 };
 		AppDispatcher = new Dispatcher();
+		Action = { type: 'COUNTER_INCREMENTED', value: 10 };
 
 		Store = FluxStore(AppDispatcher, {
-			getInitialState: function(){
-				return { count: 0 };
+			getInitialState: function() {
+				return InitialState;
 			},
 
-			'store:increment': function(payload){
-				this.setState({ count: this.state.count + payload.increment });
+			'COUNTER_INCREMENTED': function(state, action) {
+				state.counter += action.value;
 			}
 		});
 	});
 
-	it('should have initial state', function(){
-		expect(Store.getState()).toEqual({ count: 0 });
+	it('shoud have initial state', function() {
+		expect(Store.getState()).toEqual(InitialState);
 	});
 
-	it('should update state when Dispatcher fires an event', function(){
-		AppDispatcher.dispatch({ actionType: 'store:increment', increment: 13 });
-		expect(Store.getState()).toEqual({ count:13 });
+	it('should have update state when dispatcher fires an action', function() {
+		AppDispatcher.dispatch(Action);
+		expect(Store.getState()).toEqual({ counter: 10 });
 	});
 
-	it('should use custom serialization function', function() {
-		Store.serialize = JSON.stringify;
-		expect(Store.getState()).toBe('{"count":0}');
+	describe('Store dependencies', function() {
+		var ChildStore;
+
+		beforeEach(function() {
+			ChildStore = FluxStore(AppDispatcher, {
+				getInitialState: function() {
+					return { derived: null };
+				},
+
+				'COUNTER_INCREMENTED': function(state, action) {
+					// Demetra law violation. That's why we need getters
+					var counter = Store.getState().counter;
+
+					state.derived = counter;
+				}
+			});
+		});
+
+		it('should use updated store state', function() {
+			AppDispatcher.dispatch(Action);
+			expect(ChildStore.getState()).toEqual({ derived: 10 });
+		});
+
 	});
 });

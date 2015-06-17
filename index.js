@@ -22,18 +22,18 @@ function mutate(store, type, action) {
 
 function createStore(storeType) {
 	return function(dispatcher, methods) {
-		var store, token;
+		var store;
 
 		function dispatchAction(action) {
-			if(typeof methods[action.type] === 'function'){
+			if (typeof methods[action.type] === 'function') {
 				mutate(store, storeType, action);
 				store.publish(store.serialize(store.state));
 			}
 		}
 
 		function serializeState() {
-			if(dispatcher.isDispatching()){
-				dispatcher.waitFor([token]);
+			if (dispatcher.isDispatching()) {
+				dispatcher.waitFor([store.dispatchToken]);
 			}
 
 			return store.serialize(store.state);
@@ -43,14 +43,12 @@ function createStore(storeType) {
 			state: getInitialState(methods),
 			getState: serializeState,
 			serialize: identity,
-			dispatchToken: token
+			dispatchToken: dispatcher.register(dispatchAction)
 		}, newsletter(), methods);
-
-		token = dispatcher.register(dispatchAction);
 
 		return store;
 	};
-};
+}
 
 
 exports.Immutable = createStore('immutable');

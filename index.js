@@ -43,6 +43,7 @@ function createStore(storeType) {
 			state: getInitialState(methods),
 			getState: serializeState,
 			serialize: identity,
+			dispatchAction: dispatchAction,
 			dispatchToken: dispatcher.register(dispatchAction)
 		}, newsletter(), methods);
 

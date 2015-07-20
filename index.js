@@ -31,10 +31,14 @@ function createStore(nextState) {
 				dispatchToken: dispatcher.register(dispatchAction)
 			}, newsletter(), methods);
 
+		function update(action) {
+			var state = action.type in methods ? nextState(store, action) : store.state;
+
+			return store.serialize(state);
+		}
+
 		function dispatchAction(action) {
-			if (typeof methods[action.type] === 'function') {
-				store.publish(store.serialize(nextState(store, action)));
-			}
+			store.publish(update(action));
 		}
 
 		function serializeState() {

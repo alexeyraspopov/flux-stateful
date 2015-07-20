@@ -9,25 +9,31 @@ function identity(a) {
 	return a;
 }
 
-function mutate(store, type, action) {
-	switch (type) {
-	case 'mutable':
-		store[action.type](store.state, action);
-		break;
-	case 'immutable':
-		store.state = store[action.type](store.state, action);
-		break;
-	}
+function mutable(store, action) {
+	store[action.type](store.state, action);
+
+	return store.state;
 }
 
-function createStore(storeType) {
+function immutable(store, action) {
+	store.state = store[action.type](store.state, action);
+
+	return store.state;
+}
+
+function createStore(nextState) {
 	return function(dispatcher, methods) {
-		var store;
+		var store = assign({
+				state: getInitialState(methods),
+				getState: serializeState,
+				serialize: identity,
+				dispatchAction: dispatchAction,
+				dispatchToken: dispatcher.register(dispatchAction)
+			}, newsletter(), methods);
 
 		function dispatchAction(action) {
 			if (typeof methods[action.type] === 'function') {
-				mutate(store, storeType, action);
-				store.publish(store.serialize(store.state));
+				store.publish(store.serialize(nextState(store, action)));
 			}
 		}
 
@@ -39,18 +45,10 @@ function createStore(storeType) {
 			return store.serialize(store.state);
 		}
 
-		store = assign({
-			state: getInitialState(methods),
-			getState: serializeState,
-			serialize: identity,
-			dispatchAction: dispatchAction,
-			dispatchToken: dispatcher.register(dispatchAction)
-		}, newsletter(), methods);
-
 		return store;
 	};
 }
 
 
-exports.Immutable = createStore('immutable');
-exports.Mutable = createStore('mutable');
+exports.Immutable = createStore(immutable);
+exports.Mutable = createStore(mutable);

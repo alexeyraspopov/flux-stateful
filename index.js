@@ -2,7 +2,7 @@ var assign = require('object-assign'),
 	newsletter = require('newsletter');
 
 function getInitialState(methods) {
-	return typeof methods.getInitialState === 'function' ? methods.getInitialState() : {};
+	return 'getInitialState' in methods ? methods.getInitialState() : {};
 }
 
 function identity(a) {
@@ -22,6 +22,10 @@ function immutable(store, action) {
 }
 
 function createStore(stateMutation) {
+	function nextState(store, action) {
+		return store.serialize(stateMutation(store, action));
+	}
+
 	return function(dispatcher, methods) {
 		var store = assign({
 				state: getInitialState(methods),
@@ -31,13 +35,9 @@ function createStore(stateMutation) {
 				dispatchToken: dispatcher.register(dispatchAction)
 			}, newsletter(), methods);
 
-		function nextState(action) {
-			return store.serialize(stateMutation(store, action));
-		}
-
 		function dispatchAction(action) {
 			if (action.type in methods) {
-				store.publish(nextState(action));
+				store.publish(nextState(store, action));
 			}
 		}
 

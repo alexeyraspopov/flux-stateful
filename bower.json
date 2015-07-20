@@ -1,7 +1,7 @@
 {
   "name": "flux-stateful",
   "main": "index.js",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "React-like state management in your Flux stores",
   "homepage": "https://github.com/alexeyraspopov/flux-stateful",
   "authors": [

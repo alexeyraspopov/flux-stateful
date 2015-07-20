@@ -21,7 +21,7 @@ function immutable(store, action) {
 	return store.state;
 }
 
-function createStore(nextState) {
+function createStore(stateMutation) {
 	return function(dispatcher, methods) {
 		var store = assign({
 				state: getInitialState(methods),
@@ -31,14 +31,14 @@ function createStore(nextState) {
 				dispatchToken: dispatcher.register(dispatchAction)
 			}, newsletter(), methods);
 
-		function update(action) {
-			var state = action.type in methods ? nextState(store, action) : store.state;
-
-			return store.serialize(state);
+		function nextState(action) {
+			return store.serialize(stateMutation(store, action));
 		}
 
 		function dispatchAction(action) {
-			store.publish(update(action));
+			if (action.type in methods) {
+				store.publish(nextState(action));
+			}
 		}
 
 		function serializeState() {

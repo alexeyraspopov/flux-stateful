@@ -1,6 +1,4 @@
 *
-!src
-!dist
-!*.js
+!index.js
 !package.json
 !readme.md

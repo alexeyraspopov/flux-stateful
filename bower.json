@@ -19,9 +19,7 @@
   "license": "MIT",
   "ignore": [
     "*",
-    "!src",
-    "!dist",
-    "!*.js",
+    "!index.js",
     "!bower.json",
     "!readme.md"
   ],

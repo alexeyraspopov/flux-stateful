@@ -2,7 +2,7 @@
 
 Straightforward implementation for [Flux](https://facebook.github.io/flux/) stores. Maintain state easily.
 
-## install
+## Install
 
 ```bash
 $ npm install flux-stateful

@@ -1,136 +1,104 @@
-# flux-stateful
+# Flux Stateful
 
-React-like state management in your Flux stores.
+Straightforward implementation for [Flux](https://facebook.github.io/flux/) stores. Maintain state easily.
 
-## Install
+## install
 
 ```bash
-$ npm install flux-stateful --save
+$ npm install flux-stateful
 ```
 
-```bash
-$ bower install flux-stateful --save
+Also it's available via [Bower](http://bower.io).
+
+## Idea
+
+[Store](https://facebook.github.io/flux/docs/overview.html#stores) accumulates your app's state. It's the only place where mutations can be described. You can imagine your store as a function which receives current state and action and returns new state based on that action:
+
+	f(State, Action) = NewState
+
+Just because your app will have more than one action, you need to describe different mutation logic for different types of actions. In `flux-stateful` you can describe a list of reactions based on action's type (see examples below).
+
+## What's inside
+
+```javascript
+var {Immutable, Mutable} = require('flux-stateful');
 ```
 
 ## Usage
 
 *NOTE: example uses [computed property names](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Object_initializer#Computed_property_names) which are part of ECMAScript6.*
 
-The main concept is really easy:
+Here is small example of usage mutable store.
 
 ```javascript
-var StatefulStore = require('flux-stateful'),
+var MutableStore = require('flux-stateful').Mutable,
+	AppDispatcher = require('dispatcher'),
+	ActionTypes = require('constants');
+
+module.exports = MutableStore(AppDispatcher, {
+	getInitialState() {
+		return {
+			todos: {}
+		};
+	}
+
+	[ActionTypes.TODO_ADDED](state, action) {
+		var id = uuid();
+
+		state.todos[id] = { id, title: action.title, completed: false };
+	},
+
+	[ActionTypes.TODO_REMOVED](state, action) {
+		delete state.todos[action.id];
+	},
+
+	[ActionTypes.TODO_UPDATED](state, action) {
+		state.todos[action.id].title = action.title;
+	},
+
+	[ActionTypes.TODO_STATUS_CHANGED](state, action) {
+		state.todos[action.id].completed = action.completed;
+	}
+});
+```
+
+The same example but with immutable store.
+
+```javascript
+var ImmutableStore = require('flux-stateful').Immutable,
 	Immutable = require('immutable'),
-	AppDispatcher = require('./dispatcher'),
-	ActionTypes = require('./constants');
+	AppDispatcher = require('dispatcher'),
+	ActionTypes = require('constants');
 
-module.exports = StatefulStore(AppDispatcher, {
-	getInitialState(){
-		return { todos: Immutable.OrderedMap() };
-	},
-
-	// Method which will be called if payload.actionType === ActionTypes.TODO_CREATE
-	[ActionTypes.TODO_CREATED](action){
-		var id = uuid.v4(),
-			newTodo = { id, text: action.text, completed: false };
-
-		this.setState({
-			todos: this.state.todos.set(id, newTodo)
-		});
-	},
-
-	// You already understood how it works
-	[ActionTypes.TODO_DESTROYED](action){
-		this.setState({
-			todos: this.state.todos.delete(action.id)
-		});
-	}
-});
-```
-
-*NOTE: ImmutableJS is not required but recommended.*
-
-If you don't use constants or don't want to use ES6 just use plain old literal notation:
-
-```javascript
-module.exports = FluxStore(AppDispatcher, {
-	// ...
-
-	'TODO_CREATED': function(action){
-		// ...
-	}
-});
-```
-
-If you're using custom data types and want store to publish POJO then you should use `serialize` method. It will be called each time when store needs to emit new value.
-
-```javascript
-FluxStore(AppDispatcher, {
-	getInitialState(){
-		return { data: Immutable.Set() };
-	},
-
-	serialize(state){
-		return { data: state.data.toArray() };
-	}
-
-	// ...
-});
-```
-
-If you want to grab current state of store, use `getState` method.
-
-```javascript
-var App = React.createClass({
-	getInitialState(){
-		return Store.getState();
-	}
-
-	// ...
-});
-```
-
-## Immutable Pure Stores
-
-```javascript
-var ImmutableStore = require('flux-stateful/immutable'),
-	Immutable = require('immutable'),
-	AppDispatcher = require('./dispatcher'),
-	ActionTypes = require('./constants'),
-	Todo = Immutable.Record({ id: '', text: '', completed: false });
+var Todo = Immutable.Record({ id: '', title: 'untitled', completed: false });
 
 module.exports = ImmutableStore(AppDispatcher, {
-	getInitialState(){
-		return Immutable.Map({
-			todos: Immutable.OrderedMap(),
-			newTodo: ''
-		});
+	getInitialState() {
+		return Immutable.OrderedMap();
 	},
 
-	[ActionTypes.TODO_CREATED](state, payload){
-		var id = uuid(),
-			todo = Todo({
-				id: id,
-				text: payload.text
-			});
-
-		return state
-			.setIn(['todos', id], todo)
-			.set('newTodo', '');
-	},
-
-	[ActionTypes.TODO_DESTROYED](state, payload){
-		return state.removeIn(['todos', payload.id]);
-	},
-
-	[ActionTypes.TODO_STATUS_UPDATED](state, payload){
-		return state.setIn(['todos', payload.id, 'completed'], payload.completed);
-	},
-
-	// ...
-
-	serialize(state){
+	// In case if you want to use POJO inside your View
+	// Otherwise the store will publish Immutable's objects
+	serialize(state) {
 		return state.toJS();
+	},
+
+	[ActionTypes.TODO_ADDED](state, action) {
+		var id = uuid();
+
+		return state.set(id, Todo({ id, title: action.title }));
+	},
+
+	[ActionTypes.TODO_REMOVED](state, action) {
+		return state.remove(action.id);
+	},
+
+	[ActionTypes.TODO_UPDATED](state, action) {
+		return state.setIn([action.id, 'title'], action.title);
+	},
+
+	[ActionTypes.TODO_STATUS_CHANGED](state, action) {
+		return state.setIn([action.id, 'completed'], action.completed);
 	}
 });
 ```
@@ -141,20 +109,20 @@ Currently `flux-stateful` depends on [Facebook's Dispatcher](https://facebook.gi
 
 ### Dispatcher's waitFor
 
-You don't need to think about `waitFor`. You don't need to think about it as a good or bad design decision. Flux-stateful use it under the hood so you just need to use `getState()` method when you need to get data from another stores.
+You don't need to think about `waitFor`. You don't need to think about it as a good or bad design decision. Flux-stateful uses it under the hood so you just need to use `getState()` method when you need to get data from another stores.
 
 ```javascript
-StoreA = Stateful(Dispatcher, {
-	[SMTH_HAPPENED](state, action){
+StoreA = Store(Dispatcher, {
+	[SOMETHING_HAPPENED](state, action) {
 		state.data = action.data;
 	}
 });
 ```
 
 ```javascript
-StoreB = Stateful(Dispatcher, {
-	[SMTH_HAPPENED](state, action){
-		// just get some data from another store
+StoreB = Store(Dispatcher, {
+	[SOMETHING_HAPPENED](state, action) {
+		// Just get some data from another store
 		var derived = StoreA.getState();
 
 		state.data = derived.data + action.data;
@@ -165,9 +133,9 @@ StoreB = Stateful(Dispatcher, {
 ## Store API
 
 ```javascript
-Store.subscribe(callback);
-Store.unsubscribe(callback);
-Store.publish(data);
+Store.subscribe(callback)
+Store.unsubscribe(callback)
+Store.publish(data)
 ```
 
 All this methods are inherited from [newsletter](https://github.com/alexeyraspopov/newsletter).
@@ -178,6 +146,31 @@ dispatchToken
 
 ID from Flux Dispatcher. Check [official Flux documentation](https://facebook.github.io/flux/docs/dispatcher.html)
 
+```javascript
+getState()
+```
+
+Just a getter which returns current store's state.
+
+```javascript
+serialize
+```
+
+Can be specified in store's description in case if you're using complex data structures (ie ImmutableJS) and you want to continue use POJO inside View.
+
+```javascript
+// Example for ImmutableJS
+serialize(state) {
+	return state.toJS();
+}
+```
+
+```javascript
+dispatchAction(action)
+```
+
+Can be used in testing purpose. Receives action object. The same as you use for Dispatcher.
+
 ## License
 
-MIT License
+MIT

@@ -26,17 +26,17 @@ function createStore(stateMutation) {
 		return store.serialize(stateMutation(store, action));
 	}
 
-	return function FluxStore(dispatcher, methods) {
+	return function FluxStore(dispatcher, storeDescription) {
 		var store = assign({
-				state: getInitialState(methods),
+				state: getInitialState(storeDescription),
 				getState: serializeState,
 				serialize: identity,
 				dispatchAction: dispatchAction,
 				dispatchToken: dispatcher.register(dispatchAction)
-			}, newsletter(), methods);
+			}, newsletter(), storeDescription);
 
 		function dispatchAction(action) {
-			if (action.type in methods) {
+			if (action.type in storeDescription) {
 				store.publish(nextState(store, action));
 			}
 		}

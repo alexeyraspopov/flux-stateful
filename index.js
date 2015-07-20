@@ -26,7 +26,7 @@ function createStore(stateMutation) {
 		return store.serialize(stateMutation(store, action));
 	}
 
-	return function(dispatcher, methods) {
+	return function FluxStore(dispatcher, methods) {
 		var store = assign({
 				state: getInitialState(methods),
 				getState: serializeState,
@@ -52,7 +52,6 @@ function createStore(stateMutation) {
 		return store;
 	};
 }
-
 
 exports.Immutable = createStore(immutable);
 exports.Mutable = createStore(mutable);

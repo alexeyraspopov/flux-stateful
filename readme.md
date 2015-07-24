@@ -138,7 +138,7 @@ Store.unsubscribe(callback)
 Store.publish(data)
 ```
 
-All this methods are inherited from [newsletter](https://github.com/alexeyraspopov/newsletter).
+All these methods are inherited from [newsletter](https://github.com/alexeyraspopov/newsletter).
 
 ```javascript
 dispatchToken

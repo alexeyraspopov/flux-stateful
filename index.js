@@ -42,10 +42,6 @@ function createStore(stateMutation) {
 		}
 
 		function serializeState() {
-			if (dispatcher.isDispatching()) {
-				dispatcher.waitFor([store.dispatchToken]);
-			}
-
 			return store.serialize(store.state);
 		}
 

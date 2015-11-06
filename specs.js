@@ -28,29 +28,4 @@ describe('Store', function(){
 		AppDispatcher.dispatch(Action);
 		expect(Store.getState()).toEqual({ counter: 10 });
 	});
-
-	describe('Store dependencies', function() {
-		var ChildStore;
-
-		beforeEach(function() {
-			ChildStore = FluxStore(AppDispatcher, {
-				getInitialState: function() {
-					return { derived: null };
-				},
-
-				'COUNTER_INCREMENTED': function(state, action) {
-					// Demetra law violation. That's why we need getters
-					var counter = Store.getState().counter;
-
-					state.derived = counter;
-				}
-			});
-		});
-
-		it('should use updated store state', function() {
-			AppDispatcher.dispatch(Action);
-			expect(ChildStore.getState()).toEqual({ derived: 10 });
-		});
-
-	});
 });
